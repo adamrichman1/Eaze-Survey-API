@@ -1,4 +1,4 @@
-# Eaze - Survey API Technical Screening
+# Eaze Technical Screening - Survey API
 
 ### Author
 * [Adam Richman](http://www.github.com/adamrichman1)
