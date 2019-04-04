@@ -1,5 +1,4 @@
 class survey_engine {
-
     /**
      * Retrieves a survey from a file
      *
@@ -70,6 +69,17 @@ class survey_engine {
      * @return {boolean} true if the results of the survey are valid, false otherwise
      */
     static survey_results_valid(survey_id, survey_results) {
+        // TODO
+    }
+
+    /**
+     * Checks if survey questions submitted for a new survey are valid
+     *
+     * @param survey_id the id of the survey to check
+     * @param survey_questions the questions of the survey
+     * @return {boolean} true if the survey questions are valid, false otherwise
+     */
+    static survey_valid(survey_id, survey_questions) {
         // TODO
     }
 }
