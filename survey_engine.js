@@ -10,6 +10,7 @@ class survey_engine {
     }
 
     /**
+     * Retrieves the results for a survey and user
      *
      * @param survey_id the id of the survey being queried for
      * @param username the id of the user who took the survey
