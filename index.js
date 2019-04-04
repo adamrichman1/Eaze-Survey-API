@@ -68,14 +68,14 @@ app.post("/create-survey", (req, res) => {
 
 
 /**
- * POST endpoint to take a survey - accepts 1 query parameter
+ * POST endpoint to submit survey results - accepts 1 query parameter
  * id: String to identify the survey
  *
  * @param req the HTTP request object
  * @param res the HTTP response object
  * @return 200 on success, 400 bad request if a survey with the specified id has already been created
  * */
-app.post("/create-survey", (req, res) => {
+app.post("/submit-survey", (req, res) => {
     if (!survey_engine.survey_exists(req.query.id)) {
         survey_engine.create_survey(req.query.id);
         return res.send(res.ok);
