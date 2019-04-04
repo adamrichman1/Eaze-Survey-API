@@ -1,3 +1,6 @@
+/**
+ * TODO - swagger-doc for API, finish two post-endpoints, finish survey_engine, unit test, integration test, README
+ */
 import express from "express";
 
 const app = express();
