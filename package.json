@@ -19,5 +19,8 @@
   "dependencies": {
     "express": "^4.16.4",
     "save": "^2.3.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.16.1"
   }
 }
