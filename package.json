@@ -1,0 +1,23 @@
+{
+  "name": "eaze-survey-api",
+  "version": "1.0.0",
+  "description": "Survey API for Eaze's initial technical screening",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adamrichman1/Eaze-Survey-API.git"
+  },
+  "author": "Adam Richman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adamrichman1/Eaze-Survey-API/issues"
+  },
+  "homepage": "https://github.com/adamrichman1/Eaze-Survey-API#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "save": "^2.3.3"
+  }
+}
