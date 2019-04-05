@@ -1,4 +1,7 @@
 /**
+ * This file manages user-traffic with a REST API. It contains all survey endpoints and uses the survey_engine class
+ * to manage survey logic and survey error checking
+ *
  * TODO - swagger-doc for API, finish survey_engine, unit test, integration test, README
  */
 import express from "express";
@@ -25,7 +28,7 @@ app.get("/get-survey", (req, res) => {
     if (survey_engine.survey_exists(req.query.id)) {
         return res.json(survey_engine.get_survey(req.query.id), res.ok);
     }
-    res.send("Survey id not recognized: " + req.query.id, res.statusCode=400);
+    sendErrorResponse(res, 400, "Survey id not recognized: " + req.query.id);
 });
 
 
@@ -45,7 +48,7 @@ app.get("/get-survey-results", (req, res) => {
         }
         return res.send("User with username " + req.query.username + " has not taken the specified survey", res.statusCode=400);
     }
-    res.send("Survey id not recognized: " + req.query.id, res.statusCode=400);
+    sendErrorResponse(res, 400, "Survey id not recognized: " + req.query.id);
 });
 
 
@@ -64,11 +67,9 @@ app.post("/create-survey", (req, res) => {
             survey_engine.add_survey(req.query.id, req.body);
             return res.send(res.ok);
         }
-        res.statusCode=400;
-        return res.send("Survey questions were not valid.");
+        return sendErrorResponse(res, 400, "Survey questions were not valid.");
     }
-    res.statusCode=400;
-    res.send("Sorry! Survey with the specified id has already been created.");
+    sendErrorResponse(res, 400, "Sorry! Survey with the specified id has already been created.");
 });
 
 
@@ -88,9 +89,19 @@ app.post("/submit-survey", (req, res) => {
             survey_engine.save_survey_results(req.query.id, req.query.username, req.body);
             return res.send(res.ok);
         }
-        res.statusCode = 400;
-        return res.send("Survey responses invalid!");
+        return sendErrorResponse(res, 400, "Survey responses invalid!");
     }
-    res.statusCode=400;
-    res.send("Survey with the specified id does not exist!");
+    sendErrorResponse(res, 400, "Survey with the specified id does not exist!");
 });
+
+/**
+ * Sends an error response to a user
+ *
+ * @param res the HTTP response entity
+ * @param statusCode the status code to include in the response
+ * @param body the message body to include in the response
+ */
+function sendErrorResponse(res, statusCode, body) {
+    res.statusCode=statusCode;
+    res.send(body);
+}

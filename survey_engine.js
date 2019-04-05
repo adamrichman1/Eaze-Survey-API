@@ -1,3 +1,7 @@
+/**
+ * This class manages all survey logic and survey error checking. It uses the file_manager class to persist
+ * surveys and survey results in JSON files. In production, a DB layer should replace the file layer.
+ */
 class survey_engine {
     /**
      * Retrieves a survey from a file
