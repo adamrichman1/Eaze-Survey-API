@@ -30,7 +30,7 @@ paths:
         404:
           description: "Survey not found"
         200:
-          description: "Sucess"
+          description: "Success"
           schema:
             $ref: '#/definitions/Survey'
   /get-survey-results:
