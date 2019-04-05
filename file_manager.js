@@ -1,3 +1,6 @@
+/**
+ * This file manages data persistence. In production, data persistence should be implemented with a database.
+ */
 const fs = require('fs');
 
 /**
