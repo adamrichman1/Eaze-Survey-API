@@ -1,8 +1,6 @@
 /**
  * This file manages user-traffic with a REST API. It contains all survey endpoints and uses the survey_engine class
  * to manage survey logic and survey error checking
- *
- * TODO - swagger-doc for API, integration test, README
  */
 const express = require("express");
 const app = express();
