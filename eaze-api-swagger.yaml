@@ -1,0 +1,130 @@
+swagger: "2.0"
+info:
+  description: "This API allows users to anonymously submit and answer surveys."
+  version: "1.0.0"
+  title: "Eaze Survey API"
+host: "localhost:5000"
+tags:
+- name: "surveys"
+  description: "All survey endpoints"
+schemes:
+- "http"
+paths:
+  /get-survey:
+    get:
+      tags:
+      - "surveys"
+      summary: "Retrieve a survey"
+      operationId: "getSurvey"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "query"
+        description: "The unique ID of the survey"
+        required: true
+        type: "string"
+      responses:
+        404:
+          description: "Survey not found"
+        200:
+          description: "Sucess"
+          schema:
+            $ref: '#/definitions/Survey'
+  /get-survey-results:
+    get:
+      tags:
+      - "surveys"
+      summary: "Retrieve results for a survey"
+      operationId: "getSurveyResults"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "query"
+        description: "The unique ID of the survey"
+        required: true
+        type: "string"
+      - name: "username"
+        in: "query"
+        description: "The ID to identify the user's survey results"
+        required: true
+        type: "string"
+      responses:
+        404:
+          description: "Survey results not found"
+        200:
+          description: "Sucess"
+          schema:
+            $ref: '#/definitions/SurveyResults'
+  /create-survey:
+    post:
+      tags:
+      - "surveys"
+      summary: "Creates a new survey"
+      operationId: "createSurvey"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+        - in: body
+          name: body
+          description: "Survey contents"
+          required: true
+          schema:
+            $ref: '#/definitions/Survey'
+        - name: "id"
+          in: query
+          description: "The unique ID of the survey"
+          required: true
+          type: "string"
+      responses:
+        400:
+          description: "Invalid survey"
+        200:
+          description: "Success"
+  /submit-survey:
+    post:
+      tags:
+      - "surveys"
+      summary: "Submits responses to an existing survey"
+      operationId: "submitSurvey"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+        - in: body
+          name: body
+          description: "Survey results"
+          required: true
+          schema:
+            $ref: '#/definitions/SurveyResults'
+        - name: "id"
+          in: query
+          description: "The unique ID of the survey"
+          required: true
+          type: "string"
+      responses:
+        404:
+          description: "Survey not found"
+        400:
+          description: "Invalid survey results"
+        200:
+          description: "Success"
+definitions:
+  Survey:
+    type: array
+    items: 
+      type: string
+    example: ["Is the sky green?", "Is Lebron James still in the NBA?"]
+  SurveyResults:
+    type: array
+    items:
+      type: boolean
+    example: [false, true]

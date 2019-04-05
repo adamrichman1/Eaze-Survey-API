@@ -78,7 +78,7 @@ app.post("/create-survey", (req, res) => {
     }
     // Add the survey to the system and send a 200 response
     survey_engine.add_survey(req.query.id, req.body);
-    return res.send(res.ok);
+    res.send(res.ok);
 });
 
 
