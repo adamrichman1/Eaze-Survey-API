@@ -1,0 +1,504 @@
+{
+	"info": {
+		"_postman_id": "2da50633-5cec-4941-9598-090085d3db50",
+		"name": "Eaze-Survey-API",
+		"description": "Postman tests for Eaze-Survey-API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get-survey",
+			"item": [
+				{
+					"name": "get-survey-invalid-id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "09849ee1-0b87-46b2-97e4-dfd1d0f02394",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Survey ID not found\", function() {",
+									"    pm.expect(responseCode.code).to.eql(404);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "",
+								"value": ""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "localhost:5000/get-survey?id=\"5\"",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"get-survey"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "\"5\""
+								}
+							]
+						},
+						"description": "testing /get-survey with an unrecognized survey id"
+					},
+					"response": []
+				},
+				{
+					"name": "get-survey-valid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a5a15b4a-ac40-44ca-b51c-6799798fe90c",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Valid survey retrieval\", function() {",
+									"    pm.expect(responseCode.code).to.eql(200);",
+									"    pm.expect(pm.response.json()).to.eql([",
+									"\t\"what color is the sky?\", ",
+									"\t\"is the world flat?\", ",
+									"\t\"what is the best company in SF?\"",
+									"]);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "localhost:5000/get-survey?id=my-survey",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"get-survey"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "my-survey"
+								}
+							]
+						},
+						"description": "tests survey retrieval"
+					},
+					"response": []
+				}
+			],
+			"description": "tests for get-survey"
+		},
+		{
+			"name": "create-survey",
+			"item": [
+				{
+					"name": "create-survey-id-already-exists",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a286ad9a-c3cd-44ad-b845-b6f829402761",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Survey ID already used\", function() {",
+									"    pm.expect(responseCode.code).to.eql(400);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n\t\"what color is the sky?\", \n\t\"is the world flat?\", \n\t\"what is the best company in SF?\"\n]"
+						},
+						"url": {
+							"raw": "localhost:5000/create-survey?id=my-survey",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"create-survey"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "my-survey"
+								}
+							]
+						},
+						"description": "tests creation of a valid survey"
+					},
+					"response": []
+				},
+				{
+					"name": "create-survey-invalid-questions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9b9a9e3b-574a-4791-a4ba-75c9b680aa64",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Survey questions not valid\", function() {",
+									"    pm.expect(responseCode.code).to.eql(400);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n\ttrue,\n\t\"is the world flat?\", \n\t\"what is the best company in SF?\"\n]"
+						},
+						"url": {
+							"raw": "localhost:5000/create-survey?id=my-second-survey",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"create-survey"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "my-second-survey"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "tests for create-survey"
+		},
+		{
+			"name": "submit-survey",
+			"item": [
+				{
+					"name": "submit-survey-valid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a480f52-0034-4372-ab2b-188d6c88fc8b",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Valid survey submission\", function() {",
+									"    pm.expect(responseCode.code).to.eql(200);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n\ttrue,\n\tfalse,\n\ttrue\n]"
+						},
+						"url": {
+							"raw": "localhost:5000/submit-survey?id=my-survey&username=adam",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"submit-survey"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "my-survey"
+								},
+								{
+									"key": "username",
+									"value": "adam"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "submit-survey-invalid-responses",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1e59e47d-76d2-4593-94df-9dedfe71f538",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Invalid survey responses\", function() {",
+									"    pm.expect(responseCode.code).to.eql(400);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n\t\"true\",\n\t\"false\",\n\t\"true\"\n]"
+						},
+						"url": {
+							"raw": "localhost:5000/submit-survey?id=my-survey&username=adam",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"submit-survey"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "my-survey"
+								},
+								{
+									"key": "username",
+									"value": "adam"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "submit-survey-invalid-survey-id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "138e0166-bf38-4912-b67f-00666238c66a",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Survey ID not found\", function() {",
+									"    pm.expect(responseCode.code).to.eql(404);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n\ttrue,\n\tfalse,\n\ttrue\n]"
+						},
+						"url": {
+							"raw": "localhost:5000/submit-survey?id=badsurvey&username=adam",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"submit-survey"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "badsurvey"
+								},
+								{
+									"key": "username",
+									"value": "adam"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "get-survey-results",
+			"item": [
+				{
+					"name": "get-survey-results-valid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "89bb18b5-f8da-4344-afd0-614658e44016",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Valid survey results retrieval\", function() {",
+									"    pm.expect(responseCode.code).to.eql(200);",
+									"    pm.expect(pm.response.json()).to.eql([",
+									"\ttrue,",
+									"\tfalse,",
+									"\ttrue",
+									"]);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "localhost:5000/get-survey-results?id=my-survey&username=adam",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"get-survey-results"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "my-survey"
+								},
+								{
+									"key": "username",
+									"value": "adam"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-survey-results-invalid-id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "42109e83-95f4-42f8-8806-01213f71482f",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Survey not found\", function() {",
+									"    pm.expect(responseCode.code).to.eql(404);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "localhost:5000/get-survey-results?id=bad-survey&username=adam",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"get-survey-results"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "bad-survey"
+								},
+								{
+									"key": "username",
+									"value": "adam"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-survey-results-invalid-username",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "140165c6-0469-4e46-9f07-36e65941c119",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Survey not found\", function() {",
+									"    pm.expect(responseCode.code).to.eql(404);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "localhost:5000/get-survey-results?id=my-survey&username=chris",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"get-survey-results"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "my-survey"
+								},
+								{
+									"key": "username",
+									"value": "chris"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

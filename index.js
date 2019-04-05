@@ -4,10 +4,10 @@
  *
  * TODO - swagger-doc for API, integration test, README
  */
-import express from "express";
-
+const express = require("express");
 const app = express();
-const survey_engine = require('survey_engine');
+app.use(require("body-parser").json());
+const survey_engine = require('./survey_engine');
 
 /**
  * Start web-service on port 5000
@@ -15,7 +15,6 @@ const survey_engine = require('survey_engine');
 app.listen(5000, () => {
     console.log("Server running on port 5000");
 });
-
 
 /**
  * GET endpoint to request a survey, accepts 1 query parameter
@@ -26,12 +25,14 @@ app.listen(5000, () => {
  * @return the survey object if the provided id is valid, and a 400 bad request response if the id is invalid
  */
 app.get("/get-survey", (req, res) => {
-    // Send 400 response if the specified survey doesn't exist
+    // Send 404 not found response if the specified survey doesn't exist
     if (!survey_engine.survey_exists(req.query.id)) {
-        return sendErrorResponse(res, 400, "Survey id not recognized: " + req.query.id);
+        console.log(req.query.id);
+        return sendErrorResponse(res, 404, "Survey not found: " + req.query.id + ".");
     }
     // Send survey along with 200 response
-    res.json(survey_engine.get_survey(req.query.id), res.ok);
+    res.statusCode = 200;
+    res.json(survey_engine.get_survey(req.query.id));
 });
 
 
@@ -45,16 +46,17 @@ app.get("/get-survey", (req, res) => {
  * @return the survey results if the survey and user's results were found, and a 400 bad request response otherwise
  */
 app.get("/get-survey-results", (req, res) => {
-    // Send 400 response if the specified survey doesn't exist
+    // Send 404 not found response if the specified survey doesn't exist
     if (!survey_engine.survey_exists(req.query.id)) {
-        return sendErrorResponse(res, 400, "Survey id not recognized: " + req.query.id);
+        return sendErrorResponse(res, 404, "Survey not found: " + req.query.id + ".");
     }
-    // Send 400 response if the specified user has not taken the specified survey
+    // Send 404 not found response if the specified user has not taken the specified survey
     else if (!survey_engine.user_has_taken_survey(req.query.id, req.query.username)) {
-        return sendErrorResponse(res, 400, "User " + req.query.username + " has not taken the specified survey");
+        return sendErrorResponse(res, 404, "Results for user " + req.query.username + " not found.");
     }
     // Send survey results along with 200 response
-    res.send(survey_engine.get_survey_results(req.query.id, req.query.username), res.ok);
+    res.statusCode = 200;
+    res.json(survey_engine.get_survey_results(req.query.id, req.query.username));
 });
 
 
@@ -93,13 +95,13 @@ app.post("/create-survey", (req, res) => {
  * @return 200 on success, 400 bad request if the survey id is invalid
  * */
 app.post("/submit-survey", (req, res) => {
-    // Send 400 response if the specified survey does not exist
+    // Send 404 not found response if the specified survey does not exist
     if (!survey_engine.survey_exists(req.query.id)) {
-        return sendErrorResponse(res, 400, "Survey with the specified id does not exist!");
+        return sendErrorResponse(res, 404, "Survey not found: " + req.query.id + ".");
     }
     // Send 400 response if the survey responses were invalid
     else if (!survey_engine.survey_results_valid(req.query.id, survey_engine.get_survey(req.query.id), req.body)) {
-        return sendErrorResponse(res, 400, "Survey responses invalid!");
+        return sendErrorResponse(res, 400, "Survey responses invalid.");
     }
     // Save survey results in system and send 200 response
     survey_engine.save_survey_results(req.query.id, req.query.username, req.body);

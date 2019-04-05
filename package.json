@@ -4,7 +4,8 @@
   "description": "Survey API for Eaze's initial technical screening",
   "main": "index.js",
   "scripts": {
-    "test": "node ./node_modules/mocha/bin/mocha"
+    "test": "node ./node_modules/mocha/bin/mocha",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -19,7 +20,8 @@
   "dependencies": {
     "express": "^4.16.4",
     "save": "^2.3.3",
-    "mocha": "^6.0.2"
+    "mocha": "^6.0.2",
+    "body-parser": "^1.18.3"
   },
   "devDependencies": {
     "@types/express": "^4.16.1",

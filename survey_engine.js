@@ -53,7 +53,7 @@ function survey_exists(survey_id) {
  * @param survey_results the results of the survey
  */
 function save_survey_results(survey_id, username, survey_results) {
-    file_manager.write_to_file(survey_id + "-" + username);
+    file_manager.write_to_file(survey_id + "-" + username, survey_results);
 }
 
 /**
@@ -89,6 +89,7 @@ function survey_results_valid(survey_id, survey, survey_results) {
  * @return {boolean} true if the survey questions are valid, false otherwise
  */
 function survey_valid(survey_id, survey_questions) {
+    console.log(typeof(survey_questions));
     return survey_questions instanceof Array &&
         survey_questions.every(x => typeof x == "string");
 }
