@@ -2,7 +2,7 @@
  * This file manages user-traffic with a REST API. It contains all survey endpoints and uses the survey_engine class
  * to manage survey logic and survey error checking
  *
- * TODO - swagger-doc for API, unit test, integration test, README
+ * TODO - swagger-doc for API, integration test, README
  */
 import express from "express";
 
@@ -98,7 +98,7 @@ app.post("/submit-survey", (req, res) => {
         return sendErrorResponse(res, 400, "Survey with the specified id does not exist!");
     }
     // Send 400 response if the survey responses were invalid
-    else if (!survey_engine.survey_results_valid(req.query.id, req.body)) {
+    else if (!survey_engine.survey_results_valid(req.query.id, survey_engine.get_survey(req.query.id), req.body)) {
         return sendErrorResponse(res, 400, "Survey responses invalid!");
     }
     // Save survey results in system and send 200 response
