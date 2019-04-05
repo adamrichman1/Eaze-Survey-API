@@ -14,7 +14,13 @@
 * Mocha unit-tests in the test/directory
 
 ### Documentation
-* Swagger documentation in the main directory
+* Swagger Docs (eaze-api-swagger.yaml)
+
+#### Build
+```
+cd Eaze-Survey-API/
+npm install
+```
 
 #### Test
 ```
@@ -22,7 +28,7 @@ cd Eaze-Survey-API/
 npm test
 ```
 
-#### Build & Run
+#### Run
 ```
 cd Eaze-Survey-API/
 npm start
