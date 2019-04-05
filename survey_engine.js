@@ -2,7 +2,10 @@
  * This class manages all survey logic and survey error checking. It uses the file_manager class to persist
  * surveys and survey results in JSON files. In production, a DB layer should replace the file layer.
  */
+const file_manager = require('file_manager');
+
 class survey_engine {
+
     /**
      * Retrieves a survey from a file
      *
@@ -10,7 +13,7 @@ class survey_engine {
      * @returns {JSON} the survey in JSON format
      */
     static get_survey(survey_id) {
-        // TODO
+        return file_manager.read_file(survey_id);
     }
 
     /**
@@ -21,7 +24,7 @@ class survey_engine {
      * @returns {JSON} the user's results from the survey in JSON format
      */
     static get_survey_results(survey_id, username) {
-        // TODO
+        return file_manager.read_file(survey_id + "-" + username);
     }
 
     /**
@@ -31,7 +34,7 @@ class survey_engine {
      * @param survey_questions the questions of the survey
      */
     static add_survey(survey_id, survey_questions) {
-        // TODO
+        file_manager.write_to_file(survey_id, survey_questions);
     }
 
     /**
@@ -41,7 +44,7 @@ class survey_engine {
      * @returns {boolean} true if the survey exists, false otherwise
      */
     static survey_exists(survey_id) {
-        // TODO
+        return file_manager.file_exists(survey_id);
     }
 
     /**
@@ -52,7 +55,7 @@ class survey_engine {
      * @param survey_results the results of the survey
      */
     static save_survey_results(survey_id, username, survey_results) {
-        // TODO
+        file_manager.write_to_file(survey_id + "-" + username);
     }
 
     /**
@@ -63,7 +66,7 @@ class survey_engine {
      * @returns {boolean} true if the user has taken the specified survey, false otherwise
      */
     static user_has_taken_survey(survey_id, username) {
-        // TODO
+        return file_manager.file_exists(survey_id + "-" + username);
     }
 
     /**
@@ -74,7 +77,8 @@ class survey_engine {
      * @return {boolean} true if the results of the survey are valid, false otherwise
      */
     static survey_results_valid(survey_id, survey_results) {
-        // TODO
+        return file_manager.read_file(survey_id).length === survey_results.length &&
+            survey_results.all(x => typeof x == "boolean");
     }
 
     /**
@@ -85,6 +89,7 @@ class survey_engine {
      * @return {boolean} true if the survey questions are valid, false otherwise
      */
     static survey_valid(survey_id, survey_questions) {
-        // TODO
+        return survey_questions instanceof Array &&
+            survey_questions.all(x => typeof x == "string");
     }
 }

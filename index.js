@@ -25,10 +25,12 @@ app.listen(5000, () => {
  * @return the survey object if the provided id is valid, and a 400 bad request response if the id is invalid
  */
 app.get("/get-survey", (req, res) => {
-    if (survey_engine.survey_exists(req.query.id)) {
-        return res.json(survey_engine.get_survey(req.query.id), res.ok);
+    // Send 400 response if the specified survey doesn't exist
+    if (!survey_engine.survey_exists(req.query.id)) {
+        return sendErrorResponse(res, 400, "Survey id not recognized: " + req.query.id);
     }
-    sendErrorResponse(res, 400, "Survey id not recognized: " + req.query.id);
+    // Send survey along with 200 response
+    res.json(survey_engine.get_survey(req.query.id), res.ok);
 });
 
 
@@ -42,13 +44,16 @@ app.get("/get-survey", (req, res) => {
  * @return the survey results if the survey and user's results were found, and a 400 bad request response otherwise
  */
 app.get("/get-survey-results", (req, res) => {
-    if (survey_engine.survey_exists(req.query.id)) {
-        if (survey_engine.user_has_taken_survey(req.query.id, req.query.username)) {
-            return res.send(survey_engine.get_survey_results(req.query.id, req.query.username), res.ok);
-        }
-        return res.send("User with username " + req.query.username + " has not taken the specified survey", res.statusCode=400);
+    // Send 400 response if the specified survey doesn't exist
+    if (!survey_engine.survey_exists(req.query.id)) {
+        return sendErrorResponse(res, 400, "Survey id not recognized: " + req.query.id);
     }
-    sendErrorResponse(res, 400, "Survey id not recognized: " + req.query.id);
+    // Send 400 response if the specified user has not taken the specified survey
+    else if (!survey_engine.user_has_taken_survey(req.query.id, req.query.username)) {
+        return sendErrorResponse(res, 400, "User " + req.query.username + " has not taken the specified survey");
+    }
+    // Send survey results along with 200 response
+    res.send(survey_engine.get_survey_results(req.query.id, req.query.username), res.ok);
 });
 
 
@@ -62,14 +67,17 @@ app.get("/get-survey-results", (req, res) => {
  * @return 200 on success, 400 bad request if a survey with the specified id has already been created
  * */
 app.post("/create-survey", (req, res) => {
-    if (!survey_engine.survey_exists(req.query.id)) {
-        if (survey_engine.survey_valid(req.query.id, req.body)) {
-            survey_engine.add_survey(req.query.id, req.body);
-            return res.send(res.ok);
-        }
+    // Send 400 response if a survey with the specified id has already been created
+    if (survey_engine.survey_exists(req.query.id)) {
+        return sendErrorResponse(res, 400, "Survey with the specified id has already been created.");
+    }
+    // Send 400 response if the survey questions were invalid
+    else if (!survey_engine.survey_valid(req.query.id, req.body)) {
         return sendErrorResponse(res, 400, "Survey questions were not valid.");
     }
-    sendErrorResponse(res, 400, "Sorry! Survey with the specified id has already been created.");
+    // Add the survey to the system and send a 200 response
+    survey_engine.add_survey(req.query.id, req.body);
+    return res.send(res.ok);
 });
 
 
@@ -84,14 +92,17 @@ app.post("/create-survey", (req, res) => {
  * @return 200 on success, 400 bad request if the survey id is invalid
  * */
 app.post("/submit-survey", (req, res) => {
-    if (survey_engine.survey_exists(req.query.id)) {
-        if (survey_engine.survey_results_valid(req.query.id, req.body)) {
-            survey_engine.save_survey_results(req.query.id, req.query.username, req.body);
-            return res.send(res.ok);
-        }
+    // Send 400 response if the specified survey does not exist
+    if (!survey_engine.survey_exists(req.query.id)) {
+        return sendErrorResponse(res, 400, "Survey with the specified id does not exist!");
+    }
+    // Send 400 response if the survey responses were invalid
+    else if (!survey_engine.survey_results_valid(req.query.id, req.body)) {
         return sendErrorResponse(res, 400, "Survey responses invalid!");
     }
-    sendErrorResponse(res, 400, "Survey with the specified id does not exist!");
+    // Save survey results in system and send 200 response
+    survey_engine.save_survey_results(req.query.id, req.query.username, req.body);
+    res.send(res.ok);
 });
 
 /**
