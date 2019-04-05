@@ -14,7 +14,7 @@
 * Mocha unit-tests in the test/directory
 
 ### Documentation
-* Swagger Docs (eaze-api-swagger.yaml)
+* Swagger Documentation in the documentation/ directory
 
 #### Build
 ```
